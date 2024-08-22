@@ -28,8 +28,14 @@ const userSchema = new mongoose.Schema({  
   },
   playlists: [
     {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "playlist"
+      playlistId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "playlist"
+      },
+      name: {
+        type: String,
+        required: true
+      }
     }
   ]
 });

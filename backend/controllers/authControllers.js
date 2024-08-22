@@ -14,18 +14,19 @@ export const login = async (req, res) => {
         const usersCollection = db.collection('users');
 
         const user = await usersCollection.findOne({ email });
+        const userName = user.username;
         if (!user) {
-            return res.status(400).json({ message: 'User does not exist' });
+            return res.status(401).json({ message: 'Please enter correct username' });
         }
 
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            return res.status(400).json({ message: 'Incorrect Password' });
+            return res.status(401).json({ message: 'Please enter correct password' });
         }
 
         const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-        res.json({ token, user });
+        res.json({ token, userName });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Server error' });
@@ -33,17 +34,20 @@ export const login = async (req, res) => {
 };
 
 export const signup=async(req,res)=>{
-
+      const db = await connectDatabase();
+      const usersCollection = db.collection('users');
       const { email, username, password} = req.body;
+      const  checkUser = await usersCollection.findOne({ email });
+        if (checkUser !== null) {
+            return res.status(400).json({ message: 'User already exists with this email' });
+        }
       const hashedPassword = await bcrypt.hash(password,10);
       const newUser = {
         email,
         username,
         password:hashedPassword
       }
-
-      const db = await connectDatabase();
-      const usersCollection = db.collection('users');
+      
       const user = await usersCollection.insertOne(newUser);
       const token = jwt.sign({ userId: user.insertedId }, process.env.JWT_SECRET, { expiresIn: '1h' });
       res.status(201).json({ token, user });

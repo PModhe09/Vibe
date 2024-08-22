@@ -20,9 +20,9 @@ export const createPlaylist = async (req, res) => {
           const usersCollection = db.collection('users');
   
           await usersCollection.updateOne(
-              { _id: new ObjectId(userId) },
-              { $addToSet: { playlists: savedPlaylist.insertedId } } 
-          );
+            { _id:new ObjectId(userId) },
+            { $addToSet: { playlists: { playlistId: savedPlaylist.insertedId, name } } } 
+        );
   
         res.status(201).json({ message: 'Playlist created successfully', playlist: savedPlaylist });
     } catch (error) {
@@ -32,31 +32,31 @@ export const createPlaylist = async (req, res) => {
 };
 
 export const deletePlaylist = async (req, res) => {
+    const playlistId = req.body.p_id; 
     try {
-        const playlistId = req.body.p_id; 
         const db = await connectDatabase();
         const playlistsCollection = db.collection('playlist');
         const usersCollection = db.collection('users');
 
-        const playlist = await playlistsCollection.findOne({ _id: new ObjectId(playlistId) });
+        const playlistIdObj = new ObjectId(playlistId);
 
+        const playlist = await playlistsCollection.findOne({ _id: playlistIdObj });
         if (!playlist) {
             return res.status(404).json({ message: 'Playlist not found' });
         }
 
-        const deletedPlaylist = await playlistsCollection.deleteOne({ _id: new ObjectId(playlistId) });
-
+        const deletedPlaylist = await playlistsCollection.deleteOne({ _id: playlistIdObj });
         if (deletedPlaylist.deletedCount === 0) {
-            return res.status(404).json({ message: 'Playlist not found' });
+            return res.status(404).json({ message: 'Failed to delete playlist' });
         }
 
         const updateResult = await usersCollection.updateOne(
-            { _id: new ObjectId(userId) },
-            { $pull: { playlists: new ObjectId(playlistId) } }
+            { _id: new ObjectId(playlist.userId) },
+            { $pull: { playlists: { playlistId: playlistIdObj } } }
         );
 
         if (updateResult.modifiedCount === 0) {
-            return res.status(400).json({ message: 'Playlist ID was not found in user\'s playlists array' });
+            return res.status(400).json({ message: 'Playlist ID not found in user\'s playlists array' });
         }
 
         res.status(200).json({ message: 'Playlist deleted successfully and removed from user\'s playlists array' });
@@ -166,7 +166,7 @@ export const getPlaylistByUser = async (req, res) => {
 
 export const getAllSongsInPlaylist = async(req,res) => {
     try {
-
+        
         const { playlistId } = req.params;
         const db = await connectDatabase();
         const playlistsCollection = db.collection('playlist');
