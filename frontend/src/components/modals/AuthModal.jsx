@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-
 import useAuthStore from '../../stores/useAuthStore';
 
 const AuthModal = ({ closeModal }) => {
@@ -8,13 +7,35 @@ const AuthModal = ({ closeModal }) => {
     const [email, setEmail] = useState('');
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [emailError, setEmailError] = useState('');
     const { setJwtToken, setUser } = useAuthStore(state => ({
         setJwtToken: state.setJwtToken,
         setUser: state.setUser
     }));
 
+    const handleEmailChange = (e) => {
+        const value = e.target.value;
+        setEmail(value);
+
+        const atIndex = value.indexOf('@');
+        const dotIndex = value.lastIndexOf('.');
+
+        if (
+            atIndex > 0 &&
+            dotIndex > atIndex + 1 &&
+            dotIndex < value.length - 1
+        ) {
+            setEmailError('');
+        } else {
+            setEmailError('Please enter a valid email address.');
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (emailError) {
+            return; // Don't submit if there's an email error
+        }
         try {
             const url = isLogin
                 ? 'https://vibe-backend-ybmd.onrender.com/api/auth/login'
@@ -25,8 +46,6 @@ const AuthModal = ({ closeModal }) => {
                 password
             });
             localStorage.setItem('jwtToken', response.data.token);
-            console.log(response.data);
-            console.log(response.data.userName);
             localStorage.setItem('user', JSON.stringify(response.data.userName));
             setJwtToken(response.data.token);
             setUser(response.data.userName);
@@ -38,7 +57,6 @@ const AuthModal = ({ closeModal }) => {
 
     return (
         <div>
-
             <div className="fixed inset-0 bg-gray-800 bg-opacity-90 backdrop-blur-sm z-40"></div>
 
             <div className="fixed inset-0 flex items-center justify-center z-50">
@@ -69,11 +87,12 @@ const AuthModal = ({ closeModal }) => {
                             <input
                                 type="email"
                                 value={email}
-                                onChange={(e) => setEmail(e.target.value)}
+                                onChange={handleEmailChange}
                                 placeholder="Email"
-                                className="w-full border border-gray-300 p-2 rounded"
+                                className={`w-full border p-2 rounded ${emailError ? 'border-red-500' : 'border-gray-300'}`}
                                 required
                             />
+                            {emailError && <p className="text-red-500 text-sm mt-2">{emailError}</p>}
                         </div>
                         <div className="mb-4">
                             <label className="block text-gray-700">Password:</label>
@@ -90,6 +109,7 @@ const AuthModal = ({ closeModal }) => {
                             <button
                                 type="submit"
                                 className="bg-blue-600 text-white py-2 px-4 rounded"
+                                disabled={!!emailError}
                             >
                                 {isLogin ? 'Login' : 'Signup'}
                             </button>
@@ -104,7 +124,7 @@ const AuthModal = ({ closeModal }) => {
                     </form>
                 </div>
             </div>
-            </div>
+        </div>
     );
 };
 
