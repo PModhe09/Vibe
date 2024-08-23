@@ -95,7 +95,10 @@ const Home = () => {
 
       {jwtToken && (
         <>
-          <h2 className="text-2xl font-semibold text-primary mt-8">All Playlists</h2>
+          <h2 className="text-2xl font-semibold text-primary mt-8 text-center underline p-4 rounded-lg bg-white/20 backdrop-blur-md border border-white/30 shadow-md">
+            All Playlists
+          </h2>
+
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
             {playlists.map((playlist) => (
               <Card

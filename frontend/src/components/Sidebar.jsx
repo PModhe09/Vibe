@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-
 import useAuthStore from '../stores/useAuthStore';
 
 function Sidebar({ onLoginSignupClick, onClose }) {
@@ -27,7 +26,7 @@ function Sidebar({ onLoginSignupClick, onClose }) {
     return (
         <div className="w-64 h-full bg-primary text-white p-4 shadow-lg relative">
             <button 
-                className="absolute top-4 right-4 text-2xl font-semibold sm:hidden" 
+                className="absolute top-4 right-4 text-2xl font-semibold md:hidden" 
                 onClick={onClose}
             >
                 &times;
