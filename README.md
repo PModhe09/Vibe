@@ -46,19 +46,26 @@ Deployment Link: [Vibe](https://vibe-omega.vercel.app/)
    cd backend
    npm install
    ```
-3. Setup .env file as provided below
+3. Setup backend/.env file as provided below
   ``` bash
 PORT = 
 SUPABASE_URL = 
 MONGODB_URI = 
 JWT_SECRET = 
  ```
-4. First start Backend server as below
+4. Setup frontend/.env files as provided below
+Use local backend server or deployed backend server
+Deployed Backend URL = https://vibe-backend-ybmd.onrender.com
+Local Backend URL = http://localhost:3000
+```
+VITE_BACKEND_URL = <Backend URL>
+```
+5. First start Backend server as below
 ```bash
 cd backend
 npm start server
 ```
-5. Open a new terminal and start frontend
+6. Open a new terminal and start frontend
 ```bash
 cd frontend
 npm run dev
