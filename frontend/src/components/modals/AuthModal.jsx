@@ -38,8 +38,8 @@ const AuthModal = ({ closeModal }) => {
         }
         try {
             const url = isLogin
-                ? 'https://vibe-backend-ybmd.onrender.com/api/auth/login'
-                : 'https://vibe-backend-ybmd.onrender.com/api/auth/signup';
+                ? `${import.meta.env.VITE_BACKEND_URL}/api/auth/login`
+                : `${import.meta.env.VITE_BACKEND_URL}/api/auth/signup`;
             const response = await axios.post(url, {
                 email,
                 username: username,

@@ -21,7 +21,7 @@ const Home = () => {
       if (!jwtToken) return;
 
       try {
-        const response = await axios.get('https://vibe-backend-ybmd.onrender.com/api/playlist/by-users', {
+        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/playlist/by-users`, {
           headers: {
             Authorization: `Bearer ${jwtToken}`,
           },
@@ -54,7 +54,7 @@ const Home = () => {
 
   const handleCreatePlaylist = async (playlistName) => {
     try {
-      const response = await axios.post('https://vibe-backend-ybmd.onrender.com/api/playlist/', 
+      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/playlist/`, 
       { name: playlistName },
       {
         headers: {
@@ -65,7 +65,7 @@ const Home = () => {
       
       const fetchUpdatedPlaylists = async () => {
           try {
-              const response = await axios.get('https://vibe-backend-ybmd.onrender.com/api/playlist/by-users', {
+              const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/playlist/by-users`, {
                   headers: {
                       Authorization: `Bearer ${jwtToken}`,
                   },

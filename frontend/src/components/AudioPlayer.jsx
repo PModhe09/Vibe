@@ -13,11 +13,6 @@ const AudioPlayer = () => {
     const waveformRef = useRef(null);
     const waveSurferRef = useRef(null);
     const [isWaveSurferReady, setIsWaveSurferReady] = useState(false);
-    const [isMinimized, setIsMinimized] = useState(false);
-
-    const toggleMinimize = () => {
-        setIsMinimized(!isMinimized);
-    };
 
     useEffect(() => {
         if (tracks.length === 0) {
@@ -93,7 +88,6 @@ const AudioPlayer = () => {
         if (isWaveSurferReady && waveSurferRef.current && tracks.length > 0) {
             const nextIndex = (currentTrackIndex + 1) % tracks.length;
             setCurrentTrackIndex(nextIndex);
-            setIsPlaying(true);
         } else {
             console.error('WaveSurfer instance or tracks are not available');
         }
@@ -103,7 +97,6 @@ const AudioPlayer = () => {
         if (isWaveSurferReady && waveSurferRef.current && tracks.length > 0) {
             const prevIndex = (currentTrackIndex - 1 + tracks.length) % tracks.length;
             setCurrentTrackIndex(prevIndex);
-            setIsPlaying(true);
         } else {
             console.error('WaveSurfer instance or tracks are not available');
         }
@@ -142,13 +135,6 @@ const AudioPlayer = () => {
             <h1 className="text-2xl text-center font-semibold mb-4">
                 {tracks[currentTrackIndex]?.name || 'Audio Player'}
             </h1>
-            <button 
-                className="absolute top-2 right-4 text-white text-xl"
-                onClick={toggleMinimize}
-            >
-                {isMinimized ? '🔼' : '🔽'}
-            </button>
-            {!isMinimized && (
                 <div>
                     <div
                         ref={waveformRef}
@@ -194,7 +180,6 @@ const AudioPlayer = () => {
                     </div>
                     
                 </div>
-            )}
         </div>
     );
 };

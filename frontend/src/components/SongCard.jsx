@@ -14,7 +14,7 @@ const SongCard = ({ track, index, onClick, showAddToPlaylist }) => {
       if (!jwtToken) return;
 
       try {
-        const response = await axios.get('https://vibe-backend-ybmd.onrender.com/api/playlist/by-users', {
+        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/playlist/by-users`, {
           headers: {
             Authorization: `Bearer ${jwtToken}`,
           },
@@ -30,7 +30,7 @@ const SongCard = ({ track, index, onClick, showAddToPlaylist }) => {
 
   const handleAddToPlaylist = async (playlistId) => {
     try {
-      await axios.post(`https://vibe-backend-ybmd.onrender.com/api/playlist/add-song/${playlistId}`, 
+      await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/playlist/add-song/${playlistId}`, 
         { songId: track._id }, 
         {
           headers: {

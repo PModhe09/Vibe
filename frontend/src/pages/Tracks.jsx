@@ -20,7 +20,7 @@ const Tracks = ({ onUnauthorized }) => {
             }
 
             try {
-                const response = await axios.get('https://vibe-backend-ybmd.onrender.com/api/songs/', {
+                const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/songs/`, {
                     headers: {
                         Authorization: `Bearer ${jwtToken}`,
                     },
