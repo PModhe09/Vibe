@@ -1,7 +1,7 @@
 import create from 'zustand';
 
 const useAuthStore = create((set) => ({
-  jwtToken: localStorage.getItem('jwtToken') || null,
+  jwtToken: localStorage.getItem('jwtToken'),
   setJwtToken: (token) => {
     if (token === null) {
       localStorage.removeItem('jwtToken');

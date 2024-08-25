@@ -131,8 +131,8 @@ const AudioPlayer = () => {
     }
 
     return (
-        <div className="text-center mt-12">
-            <h1 className="text-2xl text-center font-semibold mb-4">
+        <div className="text-center mt-12 bg-primary h-25">
+            <h1 className="text-2xl text-center mt-2 text-white font-bold mb-4">
                 {tracks[currentTrackIndex]?.name || 'Audio Player'}
             </h1>
                 <div>

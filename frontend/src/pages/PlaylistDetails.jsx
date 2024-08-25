@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Pencil, Trash2 } from 'lucide-react';
+import { Pencil, Trash2, Play } from 'lucide-react';
 
 import useAuthStore from '../stores/useAuthStore';
 import useTrackStore from '../stores/useTrackStore';
 import NameModal from '../components/modals/NameModal';
 import SongCard from '../components/SongCard';
-
 
 const PlaylistDetails = () => {
     const { id } = useParams();
@@ -37,9 +36,14 @@ const PlaylistDetails = () => {
         fetchPlaylistDetails();
     }, [id, jwtToken, setTracks]);
 
+    const handlePlayClick = () => {
+        setCurrentTrackIndex(0); 
+        setIsPlaying(true);      
+    };
+
     const handleTrackClick = (index) => {
-        setCurrentTrackIndex(index);
-        setIsPlaying(true);
+        setCurrentTrackIndex(index); 
+        setIsPlaying(true);        
     };
 
     const handleDeletePlaylist = async () => {
@@ -78,21 +82,33 @@ const PlaylistDetails = () => {
 
     return (
         <div className="p-4 flex flex-col items-center">
-            <div className="flex items-center space-x-4 mb-4">
-                <h2 className="text-3xl font-semibold">{playlist.name}</h2>
-                <button 
-                    onClick={() => setIsModalOpen(true)} 
-                    className="text-sm text-blue-500 underline">
-                    <Pencil/>
-                </button>
-                <button 
-                    onClick={handleDeletePlaylist} 
-                    className="text-sm text-red-500 underline">
-                    <Trash2/>
-                </button>
+            <div className="w-full max-w-2xl p-4 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-lg shadow-lg mb-8">
+                <div className="flex items-center justify-between">
+                    <h2 className="text-3xl font-semibold text-white">{playlist.name}</h2>
+                    <div className="flex space-x-4">
+                        <button 
+                            onClick={() => setIsModalOpen(true)} 
+                            className="text-white hover:text-gray-300 transition">
+                            <Pencil size={20}/>
+                        </button>
+                        <button 
+                            onClick={handleDeletePlaylist} 
+                            className="text-white hover:text-gray-300 transition">
+                            <Trash2 size={20}/>
+                        </button>
+                    </div>
+                </div>
             </div>
 
-            <div className="flex flex-col space-y-4">
+            <button 
+                onClick={handlePlayClick} 
+                className="flex items-center space-x-2 mb-8 bg-blue-600 text-white px-6 py-2 rounded-full shadow-lg hover:bg-blue-700 transition duration-300 transform hover:scale-105"
+            >
+                <Play />
+                <span>Play</span>
+            </button>
+
+            <div className="w-full max-w-2xl">
                 {playlist.songDetails.map((song, index) => (
                     <SongCard
                         key={song._id}
@@ -100,7 +116,7 @@ const PlaylistDetails = () => {
                         index={index}
                         onClick={() => handleTrackClick(index)}
                         showAddToPlaylist={false}
-                        className="min-h-[120px] p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
+                        className="min-h-[120px] p-4 mbg-white rounded-lg shadow-md border border-gray-300 hover:bg-gradient-to-r hover:from-indigo-500 hover:to-purple-500 hover:text-white hover:font-bold hover:shadow-xl transition duration-300 transform hover:scale-105"
                     />
                 ))}
             </div>

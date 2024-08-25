@@ -48,7 +48,7 @@ const SongCard = ({ track, index, onClick, showAddToPlaylist }) => {
   return (
     <div
       onClick={onClick}
-      className="relative flex items-center p-4 bg-white rounded-lg shadow-lg cursor-pointer hover:bg-gray-100 transition duration-200"
+      className="relative flex items-center mb-4 p-4 bg-white rounded-lg shadow-lg cursor-pointer hover:bg-gray-100 transition duration-200"
     >
       <div className="flex-shrink-0">
         <img
@@ -57,7 +57,7 @@ const SongCard = ({ track, index, onClick, showAddToPlaylist }) => {
           className="w-12 h-12 rounded-md"
         />
       </div>
-      <div className="text-gray-500 text-sm">{index + 1}</div>
+      <div className="text-gray-500 ml-3 text-bold text-xl text-sm">{index + 1}</div>
       <div className="ml-4 flex-grow">
         <p className="text-xl font-medium text-gray-800">{track.name}</p>
       </div>

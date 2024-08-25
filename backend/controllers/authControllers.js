@@ -14,11 +14,11 @@ export const login = async (req, res) => {
         const usersCollection = db.collection('users');
 
         const user = await usersCollection.findOne({ email });
-        const userName = user.username;
         if (!user) {
-            return res.status(401).json({ message: 'Please enter correct username' });
+            return res.status(401).json({ message: 'This email is not registered, Please check again' });
         }
-
+        
+        const userName = user.username;
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
             return res.status(401).json({ message: 'Please enter correct password' });

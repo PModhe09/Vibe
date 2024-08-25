@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import useAuthStore from '../../stores/useAuthStore';
 
 const AuthModal = ({ closeModal }) => {
@@ -51,14 +53,49 @@ const AuthModal = ({ closeModal }) => {
             setUser(response.data.userName);
             closeModal();
         } catch (error) {
-            console.error('Error during authentication:', error);
+            if (error) {
+                const { status } = error.response;
+                if (status === 401 || status === 400) {
+                    toast.error(error.response.data.message, {
+                        position: "top-right",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                    });
+                } else if (status === 500) {
+                    toast.error(error.response.data.message, {
+                        position: "top-right",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                    });
+                }
+            } else {
+                console.error('Error during authentication:', error);
+            }
         }
     };
 
     return (
-        <div>
+        <>
+            <ToastContainer
+                position="top-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+            />
             <div className="fixed inset-0 bg-gray-800 bg-opacity-90 backdrop-blur-sm z-40"></div>
-
             <div className="fixed inset-0 flex items-center justify-center z-50">
                 <div className="bg-white p-8 rounded-lg shadow-lg max-w-sm w-full relative">
                     <button
@@ -67,48 +104,52 @@ const AuthModal = ({ closeModal }) => {
                     >
                         &times;
                     </button>
-                    <h2 className="text-2xl mb-4 text-center">{isLogin ? 'Login' : 'Signup'}</h2>
+                    <h2 className="text-2xl mb-4 text-center text-primary border-b-4 border-secondary pb-2">
+                        {isLogin ? 'Login' : 'Signup'}
+                    </h2>
                     <form onSubmit={handleSubmit}>
                         {!isLogin && (
                             <div className="mb-4">
-                                <label className="block text-gray-700">Username:</label>
+                                <label className="block text-primary">Username:</label>
                                 <input
                                     type="text"
                                     value={username}
                                     onChange={(e) => setUsername(e.target.value)}
-                                    placeholder="Username"
-                                    className="w-full border border-gray-300 p-2 rounded"
+                                    placeholder="Create your Username"
+                                    className="w-full border border-secondary p-2 rounded focus:outline-none focus:ring-2 focus:ring-primary"
                                     required
                                 />
                             </div>
                         )}
                         <div className="mb-4">
-                            <label className="block text-gray-700">Email:</label>
+                            <label className="block text-primary">Email:</label>
                             <input
                                 type="email"
                                 value={email}
                                 onChange={handleEmailChange}
-                                placeholder="Email"
-                                className={`w-full border p-2 rounded ${emailError ? 'border-red-500' : 'border-gray-300'}`}
+                                placeholder="Enter your Email"
+                                className={`w-full border p-2 rounded focus:outline-none focus:ring-2 focus:ring-primary ${
+                                    emailError ? 'border-red-500' : 'border-secondary'
+                                }`}
                                 required
                             />
                             {emailError && <p className="text-red-500 text-sm mt-2">{emailError}</p>}
                         </div>
                         <div className="mb-4">
-                            <label className="block text-gray-700">Password:</label>
+                            <label className="block text-primary">Password:</label>
                             <input
                                 type="password"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                placeholder="Password"
-                                className="w-full border border-gray-300 p-2 rounded"
+                                placeholder="Enter your Password"
+                                className="w-full border border-secondary p-2 rounded focus:outline-none focus:ring-2 focus:ring-primary"
                                 required
                             />
                         </div>
                         <div className="flex justify-between items-center">
                             <button
                                 type="submit"
-                                className="bg-blue-600 text-white py-2 px-4 rounded"
+                                className="bg-primary text-white py-2 px-4 rounded hover:bg-primary-dark transition-colors"
                                 disabled={!!emailError}
                             >
                                 {isLogin ? 'Login' : 'Signup'}
@@ -116,7 +157,7 @@ const AuthModal = ({ closeModal }) => {
                             <button
                                 type="button"
                                 onClick={() => setIsLogin(!isLogin)}
-                                className="text-blue-600"
+                                className="text-primary underline"
                             >
                                 {isLogin ? 'Need an account? Signup' : 'Already have an account? Login'}
                             </button>
@@ -124,7 +165,7 @@ const AuthModal = ({ closeModal }) => {
                     </form>
                 </div>
             </div>
-        </div>
+        </>
     );
 };
 
