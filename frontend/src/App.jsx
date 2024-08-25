@@ -19,9 +19,13 @@ const App = () => {
     setSidebarOpen(!isSidebarOpen);
   };
 
+  const closeSidebar = () => {
+    setSidebarOpen(true);
+  };
+
   const handleUnauthorized = () => {
     setModalOpen(true);
-    setSidebarOpen(false);
+    closeSidebar();
   };
 
   const closeModal = () => {
@@ -36,7 +40,10 @@ const App = () => {
             isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
           } md:static md:translate-x-0`}
         >
-          <Sidebar onLoginSignupClick={() => setModalOpen(true)} onClose={toggleSidebar} />
+          <Sidebar 
+            onLoginSignupClick={() => setModalOpen(true)} 
+            onClose={closeSidebar} // Pass the correct close function
+          />
         </div>
 
         <div className="flex-1 flex flex-col">

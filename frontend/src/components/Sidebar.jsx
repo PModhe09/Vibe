@@ -14,12 +14,14 @@ function Sidebar({ onLoginSignupClick, onClose }) {
         localStorage.removeItem('user');
         setJwtToken(null);
         setUser(null);
+        onClose(); // Close the sidebar after logout
     };
 
     const handleSongLibraryClick = (e) => {
         if (!jwtToken) {
             e.preventDefault();
             onLoginSignupClick(); 
+            onClose(); // Close the sidebar after unauthorized click
         }
     };
 
@@ -27,7 +29,7 @@ function Sidebar({ onLoginSignupClick, onClose }) {
         <div className="w-64 h-full bg-gradient-to-b from-primary to-secondary text-white p-6 shadow-2xl relative overflow-hidden">
             <button 
                 className="absolute top-4 right-4 text-3xl font-bold md:hidden hover:text-secondary transition-colors duration-300"
-                onClick={onClose}
+                onClick={onClose} // Ensure this calls the onClose function passed from parent
             >
                 &times;
             </button>

@@ -1,15 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import WaveSurfer from 'wavesurfer.js';
-import { CirclePlay,CirclePause, StepForward, StepBack } from 'lucide-react';
-
+import { CirclePlay, CirclePause, StepForward, StepBack, Minimize2, Maximize2 } from 'lucide-react';
 import useTrackStore from '../stores/useTrackStore';
-
 
 const AudioPlayer = () => {
     const { currentTrackIndex, setCurrentTrackIndex, tracks } = useTrackStore();
     const [isPlaying, setIsPlaying] = useState(false);
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
+    const [isMinimized, setIsMinimized] = useState(false);
     const waveformRef = useRef(null);
     const waveSurferRef = useRef(null);
     const [isWaveSurferReady, setIsWaveSurferReady] = useState(false);
@@ -23,8 +22,8 @@ const AudioPlayer = () => {
         // Initialize WaveSurfer instance
         waveSurferRef.current = WaveSurfer.create({
             container: waveformRef.current,
-            waveColor: 'violet',
-            progressColor: 'purple',
+            waveColor: '#0D9298',
+            progressColor: '#0BA1A8',
             height: 100,
             responsive: true,
             autoplay: true,
@@ -126,45 +125,60 @@ const AudioPlayer = () => {
         return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
     };
 
+    const handleToggleMinimize = () => {
+        setIsMinimized(!isMinimized);
+    };
+
     if (tracks.length === 0) {
         return <div>No tracks available</div>;
     }
 
     return (
-        <div className="text-center mt-12 bg-primary h-25">
-            <h1 className="text-2xl text-center mt-2 text-white font-bold mb-4">
-                {tracks[currentTrackIndex]?.name || 'Audio Player'}
-            </h1>
-                <div>
-                    <div
-                        ref={waveformRef}
-                        className="mx-auto w-4/5 h-24 border-2 border-gray-300 shadow-lg mb-5"
-                    ></div>
-                    <div className="flex justify-between w-4/5 mx-auto mb-2">
-                        <span>{formatTime(currentTime)}</span>
-                        <span>{formatTime(duration)}</span>
-                    </div>
-                    <input
-                        type="range"
-                        min="0"
-                        max={duration}
-                        value={currentTime}
-                        onChange={handleSeek}
-                        className="w-4/5 mx-auto mb-5"
-                        disabled={!isWaveSurferReady}
-                    />
-                    <div className="flex justify-center space-x-4">
-                        <button onClick={handlePrev} className="btn" disabled={!isWaveSurferReady}>
-                            <StepBack/>
+        <div className={`relative transition-all duration-300 ease-in-out ${isMinimized ? 'h-19 bg-gradient-to-r from-blue-500 to-purple-500 shadow-xl' : 'h-45 bg-gradient-to-r from-blue-600 to-purple-700 p-6 glassmorphism'}`}>
+            <div className={`flex flex-col items-center ${isMinimized ? 'hidden' : 'block'}`}>
+                <h1 className="text-2xl text-center text-white font-bold mb-4">
+                    {tracks[currentTrackIndex]?.name || 'Audio Player'}
+                </h1>
+                <div
+                    ref={waveformRef}
+                    className="mx-auto w-4/5 h-24 border-4 border-gray-400 rounded-full"
+                ></div>
+                <div className="flex justify-between w-4/5 mx-auto mb">
+                    <span>{formatTime(currentTime)}</span>
+                    <span>{formatTime(duration)}</span>
+                </div>
+                <input
+                    type="range"
+                    min="0"
+                    max={duration}
+                    value={currentTime}
+                    onChange={handleSeek}
+                    className="w-4/5 mx-auto mb-5"
+                    disabled={!isWaveSurferReady}
+                />
+                <div className="flex justify-center space-x-6 mt-4">
+                        <button
+                            onClick={handlePrev}
+                            className="p-3 rounded-full bg-gray-700 hover:bg-gray-600 transition-transform transform hover:scale-110"
+                            disabled={!isWaveSurferReady}
+                        >
+                            <StepBack size={24} />
                         </button>
-                        <button onClick={handlePlayPause} className="btn" disabled={!isWaveSurferReady}>
-                            {isPlaying ? <CirclePause/> : <CirclePlay/>}
+                        <button
+                            onClick={handlePlayPause}
+                            className="p-3 rounded-full bg-secondary hover:bg-primary transition-transform transform hover:scale-110"
+                            disabled={!isWaveSurferReady}
+                        >
+                            {isPlaying ? <CirclePause size={24} /> : <CirclePlay size={24} />}
                         </button>
-                        <button onClick={handleNext} className="btn" disabled={!isWaveSurferReady}>
-                            <StepForward/>
+                        <button
+                            onClick={handleNext}
+                            className="p-3 rounded-full bg-gray-700 hover:bg-gray-600 transition-transform transform hover:scale-110"
+                            disabled={!isWaveSurferReady}
+                        >
+                            <StepForward size={24} />
                         </button>
-                        <div className="mr-3">
-                        <label className="flex items-center justify-center space-x-2">
+                        <label className="flex items-center space-x-2">
                             <span>Volume:</span>
                             <input
                                 type="range"
@@ -173,13 +187,23 @@ const AudioPlayer = () => {
                                 step="0.01"
                                 onChange={handleVolumeChange}
                                 defaultValue="1"
+                                className="secondary"
                                 disabled={!isWaveSurferReady}
                             />
                         </label>
                     </div>
-                    </div>
-                    
+            </div>
+            <button
+                onClick={handleToggleMinimize}
+                className="absolute top-4 right-4 p-2 bg-white text-primary rounded-full shadow-lg hover:bg-gray-200 transition duration-300"
+            >
+                {isMinimized ? <Maximize2 /> : <Minimize2/>}
+            </button>
+            {isMinimized && (
+                <div className="flex items-center justify-between px-4 py-2">
+                    <span className="text-white font-bold text-lg truncate">{tracks[currentTrackIndex]?.name || 'No Track'}</span>
                 </div>
+            )}
         </div>
     );
 };
