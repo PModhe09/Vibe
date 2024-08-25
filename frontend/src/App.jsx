@@ -16,16 +16,13 @@ const App = () => {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated());
 
   const toggleSidebar = () => {
-    setSidebarOpen(!isSidebarOpen);
-  };
-
-  const closeSidebar = () => {
-    setSidebarOpen(true);
+    setSidebarOpen((prev) => !prev);
+    console.log('Sidebar toggled:', !isSidebarOpen);
   };
 
   const handleUnauthorized = () => {
     setModalOpen(true);
-    closeSidebar();
+    toggleSidebar();
   };
 
   const closeModal = () => {
@@ -36,17 +33,17 @@ const App = () => {
     <BrowserRouter>
       <div className="flex h-screen relative">
         <div
-          className={`fixed top-0 left-0 h-full z-40 bg-gray-800 text-white transition-transform duration-300 transform sidebar ${
+          className={`fixed top-0 left-0 h-full z-40 text-white transition-transform duration-300 transform ${
             isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
-          } md:static md:translate-x-0`}
+          } md:static md:translate-x-0 w-64 md:w-64 lg:w-72`}
         >
           <Sidebar 
             onLoginSignupClick={() => setModalOpen(true)} 
-            onClose={closeSidebar} // Pass the correct close function
+            onClose={toggleSidebar} 
           />
         </div>
 
-        <div className="flex-1 flex flex-col">
+        <div className="flex-1 flex flex-col overflow-hidden">
           <div className="md:hidden p-4">
             <Menu onClick={toggleSidebar} height={50} width={60} color='#0BA1A8'/>
           </div>

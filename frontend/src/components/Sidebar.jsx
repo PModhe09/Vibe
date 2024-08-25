@@ -1,8 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { X } from 'lucide-react';
 import useAuthStore from '../stores/useAuthStore';
 
-function Sidebar({ onLoginSignupClick, onClose }) {
+function Sidebar({ onLoginSignupClick, onClose }) { // Destructure onClose
     const { jwtToken, user, setJwtToken, setUser } = useAuthStore(state => ({
         jwtToken: state.jwtToken,
         user: state.user,
@@ -11,27 +12,28 @@ function Sidebar({ onLoginSignupClick, onClose }) {
     }));
 
     const handleLogout = () => {
+        console.log('Logout button clicked');
         localStorage.removeItem('user');
         setJwtToken(null);
         setUser(null);
-        onClose(); // Close the sidebar after logout
+        onClose(); 
     };
 
     const handleSongLibraryClick = (e) => {
         if (!jwtToken) {
             e.preventDefault();
             onLoginSignupClick(); 
-            onClose(); // Close the sidebar after unauthorized click
+            onClose(); 
         }
     };
 
     return (
         <div className="w-64 h-full bg-gradient-to-b from-primary to-secondary text-white p-6 shadow-2xl relative overflow-hidden">
             <button 
-                className="absolute top-4 right-4 text-3xl font-bold md:hidden hover:text-secondary transition-colors duration-300"
-                onClick={onClose} // Ensure this calls the onClose function passed from parent
+                className="absolute top-4 right-4 ext-3xl font-bold md:hidden hover:text-secondary transition-colors duration-300"
+                onClick={onClose}
             >
-                &times;
+                <X size={24}/>
             </button>
 
             <div className="absolute inset-0 bg-gradient-radial from-transparent to-secondary opacity-40 blur-2xl z-0"></div>
@@ -48,12 +50,16 @@ function Sidebar({ onLoginSignupClick, onClose }) {
                 <Link 
                     to="/" 
                     className="bg-secondary hover:bg-gradient-to-r hover:from-purple-400 hover:via-pink-500 hover:to-red-500 text-white py-3 px-5 rounded-full text-center font-semibold shadow-lg transform transition-transform duration-300 hover:-translate-y-1"
+                    onClick={onClose} 
                 >
                     Home
                 </Link>
                 <Link 
                     to="/tracks" 
-                    onClick={handleSongLibraryClick} 
+                    onClick={(e) => {
+                        handleSongLibraryClick(e);
+                        onClose();
+                    }} 
                     className="bg-secondary hover:bg-gradient-to-r hover:from-green-400 hover:via-blue-500 hover:to-purple-500 text-white py-3 px-5 rounded-full text-center font-semibold shadow-lg transform transition-transform duration-300 hover:-translate-y-1"
                 >
                     Song Library
@@ -69,7 +75,11 @@ function Sidebar({ onLoginSignupClick, onClose }) {
                 </button>
             ) : (
                 <button
-                    onClick={onLoginSignupClick}
+                    onClick={() => {
+                        console.log('Login/Signup button clicked');
+                        onLoginSignupClick();
+                        onClose();
+                    }}
                     className="bg-green-500 text-white py-3 px-5 rounded-full w-full font-semibold shadow-lg transform transition-transform duration-300 hover:-translate-y-1 relative z-10"
                 >
                     Login/Signup
