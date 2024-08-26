@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { X } from 'lucide-react';
 import useAuthStore from '../stores/useAuthStore';
 
-function Sidebar({ onLoginSignupClick, onClose }) { // Destructure onClose
+function Sidebar({ onLoginSignupClick, onClose }) { 
     const { jwtToken, user, setJwtToken, setUser } = useAuthStore(state => ({
         jwtToken: state.jwtToken,
         user: state.user,
@@ -30,15 +30,13 @@ function Sidebar({ onLoginSignupClick, onClose }) { // Destructure onClose
     return (
         <div className="w-64 h-full bg-gradient-to-b from-primary to-secondary text-white p-6 shadow-2xl relative overflow-hidden">
             <button 
-                className="absolute top-4 right-4 ext-3xl font-bold md:hidden hover:text-secondary transition-colors duration-300"
-                onClick={onClose}
+                className="absolute top-2 right-4 md:hidden hover:text-secondary transition-colors duration-300"
+                
             >
-                <X size={24}/>
+                <X size={24} className='cursor-pointer' onClick={onClose} />
             </button>
 
-            <div className="absolute inset-0 bg-gradient-radial from-transparent to-secondary opacity-40 blur-2xl z-0"></div>
-
-            <h1 className="text-4xl mb-10 font-extrabold relative z-10 animate-pulse">Vibe Music</h1>
+            <h1 className="text-4xl font-extrabold mt-6 relative z-10 animate-pulse">Vibe Music</h1>
             
             {jwtToken && (
                 <div className="mb-10 relative z-10">

@@ -44,9 +44,9 @@ const App = () => {
         </div>
 
         <div className="flex-1 flex flex-col overflow-hidden">
-          <div className="md:hidden p-4">
-            <Menu onClick={toggleSidebar} height={50} width={60} color='#0BA1A8'/>
-          </div>
+           <span className="md:hidden p-4 inline-block">
+              <Menu onClick={toggleSidebar} height={50} width={60} color='#0BA1A8'/>
+           </span>
 
           <div className="flex-1 p-4 overflow-y-auto">
             <Routes>
