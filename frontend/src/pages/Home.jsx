@@ -29,7 +29,7 @@ const Home = () => {
         if (error.response && error.response.status === 401) {
           setShowAuthModal(true);
         } else {
-          //console.error('Error fetching playlists:', error);
+          console.error('Error fetching playlists:', error);
         }
       }
     };

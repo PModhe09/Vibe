@@ -24,7 +24,7 @@ export const login = async (req, res) => {
             return res.status(401).json({ message: 'Please enter correct password' });
         }
 
-        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: 365 * 24 * 60 * 60 });
 
         res.json({ token, userName });
     } catch (error) {
@@ -49,7 +49,7 @@ export const signup=async(req,res)=>{
       }
       
       const user = await usersCollection.insertOne(newUser);
-      const token = jwt.sign({ userId: user.insertedId }, process.env.JWT_SECRET, { expiresIn: '1h' });
+      const token = jwt.sign({ userId: user.insertedId }, process.env.JWT_SECRET, { expiresIn: 365 * 24 * 60 * 60 });
       res.status(201).json({ token, user });
 
 }
