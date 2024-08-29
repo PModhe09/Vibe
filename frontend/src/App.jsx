@@ -17,7 +17,7 @@ const App = () => {
 
   const toggleSidebar = () => {
     setSidebarOpen((prev) => !prev);
-    console.log('Sidebar toggled:', !isSidebarOpen);
+   // console.log('Sidebar toggled:', !isSidebarOpen);
   };
 
   const handleUnauthorized = () => {

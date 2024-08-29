@@ -62,6 +62,7 @@ const AudioPlayer = () => {
             const trackUrl = tracks[index].url;
             if (trackUrl) {
                 waveSurferRef.current.load(trackUrl);
+                //isPlaying(true);
             } else {
                 console.error('Track URL is not defined for track:', tracks[index]);
             }
