@@ -38,7 +38,7 @@ export const uploadSong = async (req, res) => {
 
         await songsCollection.insertOne(newSong);
 
-        res.status(200).send({
+        res.status(201).send({
             message: 'File uploaded successfully',
             data: newSong
         });
