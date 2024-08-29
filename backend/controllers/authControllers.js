@@ -26,7 +26,7 @@ export const login = async (req, res) => {
 
         const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: 365 * 24 * 60 * 60 });
 
-        res.status(200).json({ token, userName: username });
+        res.json({ token, userName });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Server error' });
@@ -34,31 +34,23 @@ export const login = async (req, res) => {
 };
 
 export const signup = async (req, res) => {
-    try {
-      const db = await connectDatabase();
-      const usersCollection = db.collection('users');
-      const { email, username, password } = req.body;
-  
-      const checkUser = await usersCollection.findOne({ email });
+    const db = await connectDatabase();
+    const usersCollection = db.collection('users');
+    const { email, username, password} = req.body;
+    const  checkUser = await usersCollection.findOne({ email });
       if (checkUser !== null) {
-        return res.status(400).json({ message: 'User already exists with this email' });
+          return res.status(400).json({ message: 'User already exists with this email' });
       }
-  
-      const hashedPassword = await bcrypt.hash(password, 10);
-      const newUser = {
-        email,
-        username,
-        password: hashedPassword
-      };
-  
-      const user = await usersCollection.insertOne(newUser);
-      const token = jwt.sign({ userId: user.insertedId }, process.env.JWT_SECRET, { expiresIn: 365 * 24 * 60 * 60 });
-  
-      res.status(201).json({ token, user });
-    } catch (error) {
-      console.error('Error during signup:', error);
-      res.status(500).json({ message: 'Internal server error' });
+    const hashedPassword = await bcrypt.hash(password,10);
+    const newUser = {
+      email,
+      username,
+      password:hashedPassword
     }
+    
+    const user = await usersCollection.insertOne(newUser);
+    const token = jwt.sign({ userId: user.insertedId }, process.env.JWT_SECRET, { expiresIn: 365 * 24 * 60 * 60 });
+    res.status(201).json({ token, user });
   };
   
 
