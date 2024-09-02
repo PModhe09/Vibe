@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import useAuthStore from '../../stores/useAuthStore';
+
 
 const AuthModal = ({ closeModal }) => {
     const [isLogin, setIsLogin] = useState(true);
@@ -10,10 +10,7 @@ const AuthModal = ({ closeModal }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [emailError, setEmailError] = useState('');
-    const { setJwtToken, setUser } = useAuthStore(state => ({
-        setJwtToken: state.setJwtToken,
-        setUser: state.setUser
-    }));
+
 
     const handleEmailChange = (e) => {
         const value = e.target.value;
@@ -49,8 +46,6 @@ const AuthModal = ({ closeModal }) => {
             });
             localStorage.setItem('jwtToken', response.data.token);
             localStorage.setItem('user', JSON.stringify(response.data.userName));
-            setJwtToken(response.data.token);
-            setUser(response.data.userName);
             closeModal();
         } catch (error) {
             if (error) {

@@ -3,7 +3,6 @@ import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Pencil, Trash2, Play } from 'lucide-react';
 
-import useAuthStore from '../stores/useAuthStore';
 import useTrackStore from '../stores/useTrackStore';
 import NameModal from '../components/modals/NameModal';
 import SongCard from '../components/SongCard';
@@ -12,9 +11,9 @@ const PlaylistDetails = () => {
     const { id } = useParams();
     const [playlist, setPlaylist] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const jwtToken = useAuthStore((state) => state.jwtToken);
     const { setTracks, setCurrentTrackIndex, setIsPlaying } = useTrackStore();
     const navigate = useNavigate();
+    const jwtToken = localStorage.getItem('jwtToken');
 
     useEffect(() => {
         const fetchPlaylistDetails = async () => {
@@ -23,7 +22,7 @@ const PlaylistDetails = () => {
             try {
                 const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/playlist/all-songs/${id}`, {
                     headers: {
-                        Authorization: `Bearer ${jwtToken}`,
+                        Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
                     },
                 });
                 setPlaylist(response.data.playlist);
@@ -50,7 +49,7 @@ const PlaylistDetails = () => {
         try {
             await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/playlist`, {
                 headers: {
-                    Authorization: `Bearer ${jwtToken}`,
+                    Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
                 },
                 data: { p_id: id },
             });
@@ -67,7 +66,7 @@ const PlaylistDetails = () => {
             { newName }, 
             {
                 headers: {
-                    Authorization: `Bearer ${jwtToken}`,
+                    Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
                 }
             });
             setPlaylist((prev) => ({ ...prev, name: newName }));

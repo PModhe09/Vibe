@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import WaveSurfer from 'wavesurfer.js';
-import { CirclePlay, CirclePause, StepForward, StepBack, Minimize2, Maximize2 } from 'lucide-react';
+import { CirclePlay, CirclePause, StepForward, StepBack, Minimize2, Maximize2,Volume } from 'lucide-react';
 import useTrackStore from '../stores/useTrackStore';
 
 const AudioPlayer = () => {
@@ -131,7 +131,7 @@ const AudioPlayer = () => {
     };
 
     if (tracks.length === 0) {
-        return <div>No tracks available</div>;
+        return <></>;
     }
 
     return (
@@ -180,7 +180,7 @@ const AudioPlayer = () => {
                             <StepForward size={24} />
                         </button>
                         <label className="flex items-center space-x-2">
-                            <span>Volume:</span>
+                            <span><Volume/></span>
                             <input
                                 type="range"
                                 min="0"

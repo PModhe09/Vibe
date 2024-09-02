@@ -7,13 +7,12 @@ import Home from './pages/Home';
 import AudioPlayer from './components/AudioPlayer';
 import Tracks from './pages/Tracks';
 import PlaylistDetails from './pages/PlaylistDetails';
-import useAuthStore from './stores/useAuthStore';
 import AuthModal from './components/modals/AuthModal';
 
 const App = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
-  const isAuthenticated = useAuthStore((state) => state.isAuthenticated());
+  const isAuthenticated = !!localStorage.getItem('jwtToken');
 
   const toggleSidebar = () => {
     setSidebarOpen((prev) => !prev);

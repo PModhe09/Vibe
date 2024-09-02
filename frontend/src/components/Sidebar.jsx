@@ -1,21 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { X } from 'lucide-react';
-import useAuthStore from '../stores/useAuthStore';
 
 function Sidebar({ onLoginSignupClick, onClose }) { 
-    const { jwtToken, user, setJwtToken, setUser } = useAuthStore(state => ({
-        jwtToken: state.jwtToken,
-        user: state.user,
-        setJwtToken: state.setJwtToken,
-        setUser: state.setUser,
-    }));
 
+    const jwtToken = localStorage.getItem('jwtToken');
+    const user = localStorage.getItem('user');
     const handleLogout = () => {
         console.log('Logout button clicked');
         localStorage.removeItem('user');
-        setJwtToken(null);
-        setUser(null);
+        localStorage.removeItem('jwtToken');
         onClose(); 
     };
 
@@ -36,7 +30,7 @@ function Sidebar({ onLoginSignupClick, onClose }) {
                 <X size={24} className='cursor-pointer' onClick={onClose} />
             </button>
 
-            <h1 className="text-4xl font-extrabold mt-6 relative z-10 animate-pulse">Vibe Music</h1>
+            <h1 className="text-4xl font-extrabold mt-6 mb-8 relative z-10 animate-pulse">Vibe Music</h1>
             
             {jwtToken && (
                 <div className="mb-10 relative z-10">

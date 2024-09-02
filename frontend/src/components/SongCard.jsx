@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-import useAuthStore from '../stores/useAuthStore';
 import musicImage from '../assets/images/music.jpg';
 
 const SongCard = ({ track, index, onClick, showAddToPlaylist }) => {
   const [playlists, setPlaylists] = useState([]);
   const [showOptions, setShowOptions] = useState(false);
-  const jwtToken = useAuthStore((state) => state.jwtToken);
+  const jwtToken = localStorage.getItem('jwtToken');
 
   useEffect(() => {
     const fetchPlaylists = async () => {

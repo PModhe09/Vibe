@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { BadgePlus } from 'lucide-react';
-import useAuthStore from '../stores/useAuthStore';
 import Card from '../components/Card';
 import AuthModal from '../components/modals/AuthModal';
 import NameModal from '../components/modals/NameModal';
@@ -10,18 +9,18 @@ import NameModal from '../components/modals/NameModal';
 const Home = () => {
   const [playlists, setPlaylists] = useState([]);
   const [isNameModalOpen, setIsNameModalOpen] = useState(false);
-  const jwtToken = useAuthStore((state) => state.jwtToken);
   const navigate = useNavigate();
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const isAuthenticated = !!localStorage.getItem('jwtToken');
 
   useEffect(() => {
     const fetchPlaylists = async () => {
-      if (!jwtToken) return;
-
+      if (!isAuthenticated) return;
+      
       try {
         const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/playlist/by-users`, {
           headers: {
-            Authorization: `Bearer ${jwtToken}`,
+            Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
           },
         });
         setPlaylists(response.data.playlists);
@@ -35,14 +34,14 @@ const Home = () => {
     };
 
     fetchPlaylists();
-  }, [jwtToken]);
+  }, []);
 
   const handleCardClick = (playlistId) => {
     navigate(`/playlist/${playlistId}`);
   };
 
   const handleSongLibraryClick = () => {
-    if (!jwtToken) {
+    if (isAuthenticated===false) {
       setShowAuthModal(true);
     } else {
       navigate('/tracks');
@@ -56,7 +55,7 @@ const Home = () => {
         { name: playlistName },
         {
           headers: {
-            Authorization: `Bearer ${jwtToken}`,
+            Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
           },
         }
       );
@@ -65,7 +64,7 @@ const Home = () => {
         try {
           const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/playlist/by-users`, {
             headers: {
-              Authorization: `Bearer ${jwtToken}`,
+              Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
             },
           });
           setPlaylists(response.data.playlists);
@@ -96,7 +95,7 @@ const Home = () => {
         </div>
       </div>
 
-      {jwtToken && (
+      {isAuthenticated && (
         <div className="group space-y-4">
           <h2 className="text-3xl text-white font-semibold bg-gradient-to-r from-primary to-secondary p-4 rounded-lg border relative overflow-hidden shadow-md transition-all duration-300 ease-in-out group-hover:bg-gradient-to-r group-hover:from-pink-500 group-hover:via-red-500 group-hover:to-yellow-500 group-hover:font-bold">
             All Playlists
@@ -117,7 +116,7 @@ const Home = () => {
               style={{ minHeight: '120px' }}
             >
               <span className="text-3xl text-gray-500 group-hover:text-white">
-                <BadgePlus />
+                <BadgePlus size={80}/>
               </span>
             </div>
           </div>

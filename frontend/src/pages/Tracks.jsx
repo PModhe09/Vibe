@@ -1,17 +1,14 @@
 import React, { useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 import { Play } from 'lucide-react';
 
-import useAuthStore from '../stores/useAuthStore';
 import useTrackStore from '../stores/useTrackStore';
 import SongCard from '../components/SongCard';
 
 const Tracks = ({ onUnauthorized }) => {
-    const jwtToken = useAuthStore((state) => state.jwtToken);
     const { tracks, setTracks, setCurrentTrackIndex, setIsPlaying } = useTrackStore();
-    const navigate = useNavigate();
-
+    const jwtToken = localStorage.getItem('jwtToken');
+   // console.log(jwtToken)
     useEffect(() => {
         const fetchSongs = async () => {
             if (!jwtToken) {
@@ -19,24 +16,26 @@ const Tracks = ({ onUnauthorized }) => {
                 return;
             }
 
-            try {
-                const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/songs/`, {
-                    headers: {
-                        Authorization: `Bearer ${jwtToken}`,
-                    },
-                });
-                setTracks(response.data.songs);
-            } catch (error) {
-                if (error.response && error.response.status === 401) {
-                    onUnauthorized();
-                } else {
-                    console.error('Error fetching songs:', error);
+            if (tracks.length === 0) {
+                try {
+                    const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/songs/`, {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
+                        },
+                    });
+                    setTracks(response.data.songs);
+                } catch (error) {
+                    if (error.response && error.response.status === 401) {
+                        onUnauthorized();
+                    } else {
+                        console.error('Error fetching songs:', error);
+                    }
                 }
             }
         };
 
         fetchSongs();
-    }, [jwtToken, setTracks, onUnauthorized]);
+    }, [jwtToken, tracks.length, setTracks, onUnauthorized]);
 
     if (!jwtToken) {
         return null;
